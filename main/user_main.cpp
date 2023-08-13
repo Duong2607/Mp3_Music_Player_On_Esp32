@@ -101,12 +101,7 @@ uint8_t prev_icon[] = {
 	0xff, 0xff, 0x7f, 0xff, 0x1f, 0xbf, 0x0f, 0x9f, 0x03, 0x87, 0x01, 0x83, 0x00, 0x00, 0x00, 0x00
 };
 
-uint8_t rect_icon[] = {
-	0x3f, 0xfc, 0x40, 0x02, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 
-	0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x40, 0x02, 0x3f, 0xfc
-	
-};
-
+// DVD image
 uint8_t dvd_icon[dvdIMAGES][392] = {
 	{
 		// 'dvd1' 60x60px
@@ -349,17 +344,11 @@ int musicIndex = 0;
 bool check = false;
 SSD1306_t dev;
 uint8_t *segmentImage = (uint8_t *)malloc(IMAGES*8*56); // 4 IMAGES 8 page 56 pixel
-
-
-#define BUILTIN_LED GPIO_NUM_2
-
-// char listMusic[10][256];
-// char* listMusic[10];
 string listMusic[10];
-
-
+// biến lưu chỉ số mảng chứa tên file nhạc
 int i = 0;
 
+// hàm gán tên file vào mảng để xử lí
 void list_files(const char *path) {
     printf("Listing files in %s:\n", path);
 
@@ -396,14 +385,10 @@ void wait_for_button_push()
 void  wait_for_check() {
 	while (check== false)
 	{
-		/* code */
     vTaskDelay(pdMS_TO_TICKS(10));
-
 	}
 	
 }
-// char name1[30] ;
-		char name[20] ;
 
 void wait_for_var()
 {
@@ -417,27 +402,23 @@ void wait_for_var()
 const int BUFFER_SIZE = 1024;
 int segmentImageIndexplus = 8*56;
 
+// hàm hiển thị thanh công cụ
 void displaytoolbar(SSD1306_t* dev ) {
 
-    // list_files(MOUNT_POINT);
-		wait_for_check();
+	wait_for_check();
 	ssd1306_clear_screen(dev, false);
-						for (int page=0;page<8;page++) {
-					ssd1306_display_image(dev, page, 0, &segmentImage[segmentImageIndexplus+page*56], 56);
-					}
+	for (int page=0;page<8;page++) {
+		ssd1306_display_image(dev, page, 0, &segmentImage[segmentImageIndexplus+page*56], 56);
+	}
+	// thêm phần cách cho tên file để hiển thị đúng vị trí cần trên oled và chuyển sang kiểu 
+	// const char để hiển thị
 		string space = "         ";
 		space += listMusic[musicIndex];
 		const char* charlistMusic = space.c_str();
-        printf("  %d",musicIndex);
-
-        // printf("  %s\n",listMusic[1]);
-		cout<<"vcc1"<<listMusic[musicIndex]<<endl;
-
 
 	if(isPlaying) {
 		if(cursorPosition == 0) {
 		ssd1306_display_text(dev, 0,(char*) charlistMusic, 20, false);
-		// strcat(name,listMusic[musicIndex]);
 		ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, true);
 		ssd1306_bitmaps(dev, 90, 35, pause_icon, 16, 16, false);
 		ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, false);
@@ -445,45 +426,40 @@ void displaytoolbar(SSD1306_t* dev ) {
 		}
 		if(cursorPosition == 1) {
 		ssd1306_display_text(dev, 0,(char*) charlistMusic, 20, false);
-					// strcat(char*)(charlistMusic,charlistMusic);
-			ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
-			ssd1306_bitmaps(dev, 90, 35, pause_icon, 16, 16, true);
-			ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 90, 35, pause_icon, 16, 16, true);
+		ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, false);
 		
 		}
 
 		if(cursorPosition == 2) {
 		ssd1306_display_text(dev, 0,(char*) charlistMusic, 20, false);
-					// strcat(char*)(charlistMusic,charlistMusic);
-			ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
-			ssd1306_bitmaps(dev, 90, 35, pause_icon, 16, 16, false);
-			ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, true);
+		ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 90, 35, pause_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, true);
 		
 		}
 	} else {
 		if(cursorPosition == 0) {
 		ssd1306_display_text(dev, 0,(char*) charlistMusic, 20, false);
-					// strcat(char*)(charlistMusic,charlistMusic);
-			ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, true);
-			ssd1306_bitmaps(dev, 90, 35, play_icon, 16, 16, false);
-			ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, true);
+		ssd1306_bitmaps(dev, 90, 35, play_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, false);
 		
 		}
 		if(cursorPosition == 1) {
 		ssd1306_display_text(dev, 0,(char*) charlistMusic, 20, false);
-					// strcat(char*)(charlistMusic,charlistMusic);
-			ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
-			ssd1306_bitmaps(dev, 90, 35, play_icon, 16, 16, true);
-			ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 90, 35, play_icon, 16, 16, true);
+		ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, false);
 		
 		}
 
 		if(cursorPosition == 2) {
 		ssd1306_display_text(dev, 0,(char*) charlistMusic, 20, false);
-					// strcat(char*)(charlistMusic,charlistMusic);
-			ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
-			ssd1306_bitmaps(dev, 90, 35, play_icon, 16, 16, false);
-			ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, true);
+		ssd1306_bitmaps(dev, 70, 35, prev_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 90, 35, play_icon, 16, 16, false);
+		ssd1306_bitmaps(dev, 110, 35, next_icon, 16, 16, true);
 		
 		}
 	}
@@ -491,17 +467,10 @@ void displaytoolbar(SSD1306_t* dev ) {
 	updateScreen =  false;
 }
 
+// task chơi nhạc
 void play_task(void *param)
 {
 		wait_for_check();
-	// ssd1306_clear_screen(dev, false);
-		// char* listMusic[10];
-    // list_files(MOUNT_POINT);
-
-        // printf("haizz  %s\n",listMusic[1]);
-
-		cout<<"vcc2"<<listMusic[1]<<endl;
-
 
 #ifdef VOLUME_CONTROL
   // set up the ADC for reading the volume control
@@ -509,9 +478,9 @@ void play_task(void *param)
   adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11);
 #endif
   // create the output - see config.h for settings
-// #ifdef USE_I2S
-//   Output *output = new I2SOutput(I2S_NUM_0, i2s_speaker_pins);
-// #else
+#ifdef USE_I2S
+  Output *output = new I2SOutput(I2S_NUM_0, i2s_speaker_pins);
+#else
   Output *output = new DACOutput();
 // #endif
 #ifdef I2S_SPEAKDER_SD_PIN
@@ -519,12 +488,7 @@ void play_task(void *param)
   gpio_set_direction(I2S_SPEAKDER_SD_PIN, GPIO_MODE_OUTPUT);
   gpio_set_level(I2S_SPEAKDER_SD_PIN, 1);
 #endif
-  // setup the button to trigger playback - see config.h for settings
-//   gpio_set_direction(GPIO_BUTTON, GPIO_MODE_INPUT);
-//   gpio_set_pull_mode(GPIO_BUTTON, GPIO_PULLUP_ONLY);
-  // create the file system
-  // SPIFFS spiffs("/mp3-test");
-  // setup for the mp3 decoded
+
   short *pcm = (short *)malloc(sizeof(short) * MINIMP3_MAX_SAMPLES_PER_FRAME);
   uint8_t *input_buf = (uint8_t *)malloc(BUFFER_SIZE);
   if (!pcm)
@@ -550,17 +514,11 @@ void play_task(void *param)
     int buffered = 0;
     int decoded = 0;
     bool is_output_started = false;
-    // this assumes that you have uploaded the mp3 file to the SPIFFS
-    // FILE *fp = fopen(MOUNT_POINT"/KHONGD~1.mp3", "r");
-		// char* listMusic[10];
-		// printf("name: %s", listMusic[musicIndex]);
-		// printf("name: %s", name);
-    // FILE *fp = fopen("/sdcard/b1.mp3", "r");
-			string line = "/sdcard/";
-		line += listMusic[musicIndex];
-		const char* charpathMusic = line.c_str();
-    FILE *fp = fopen(charpathMusic, "r");
 
+	string line = "/sdcard/";
+	line += listMusic[musicIndex];
+	const char* charpathMusic = line.c_str();
+    FILE *fp = fopen(charpathMusic, "r");
 
     if (!fp)
     {
@@ -580,7 +538,6 @@ void play_task(void *param)
 	}
 #ifdef VOLUME_CONTROL
       auto adc_value = float(adc1_get_raw(VOLUME_CONTROL)) / 4096.0f;
-	//   printf("volume: %f",float(adc1_get_raw(VOLUME_CONTROL)));
       // make the actual volume match how people hear
       // https://ux.stackexchange.com/questions/79672/why-dont-commercial-products-use-logarithmic-volume-controls
       output->set_volume(adc_value * adc_value);
@@ -589,7 +546,7 @@ void play_task(void *param)
       size_t n = fread(input_buf + buffered, 1, to_read, fp);
       // feed the watchdog
       vTaskDelay(pdMS_TO_TICKS(1));
-      // ESP_LOGI("main", "Read %d bytes\n", n);
+
       buffered += n;
       if (buffered == 0)
       {
@@ -629,7 +586,7 @@ void play_task(void *param)
         // keep track of how many samples we've decoded
         decoded += samples;
       }
-      // ESP_LOGI("main", "decoded %d samples\n", decoded);
+
 	  last_index = index;
     }
     ESP_LOGI("main", "Finished\n");
@@ -638,6 +595,7 @@ void play_task(void *param)
   }
   
 }
+// undisplay bitmap
 void ssd1306_bitmaps_convert(SSD1306_t * dev, int xpos, int ypos, uint8_t * bitmap, int width, int height, bool invert)
 {
 	if ( (width % 8) != 0) {
@@ -692,25 +650,25 @@ void ssd1306_bitmaps_convert(SSD1306_t * dev, int xpos, int ypos, uint8_t * bitm
 	
 }
 
-
+// task hiển thị oled
 void display_task(void *param) {
 	
-#if CONFIG_I2C_INTERFACE
-	ESP_LOGI(TAG, "INTERFACE is i2c");
-	ESP_LOGI(TAG, "CONFIG_SDA_GPIO=%d",CONFIG_SDA_GPIO);
-	ESP_LOGI(TAG, "CONFIG_SCL_GPIO=%d",CONFIG_SCL_GPIO);
-	ESP_LOGI(TAG, "CONFIG_RESET_GPIO=%d",CONFIG_RESET_GPIO);
-	i2c_master_init(&dev, CONFIG_SDA_GPIO, CONFIG_SCL_GPIO, CONFIG_RESET_GPIO);
-#endif // CONFIG_I2C_INTERFACE
+	#if CONFIG_I2C_INTERFACE
+		ESP_LOGI(TAG, "INTERFACE is i2c");
+		ESP_LOGI(TAG, "CONFIG_SDA_GPIO=%d",CONFIG_SDA_GPIO);
+		ESP_LOGI(TAG, "CONFIG_SCL_GPIO=%d",CONFIG_SCL_GPIO);
+		ESP_LOGI(TAG, "CONFIG_RESET_GPIO=%d",CONFIG_RESET_GPIO);
+		i2c_master_init(&dev, CONFIG_SDA_GPIO, CONFIG_SCL_GPIO, CONFIG_RESET_GPIO);
+	#endif // CONFIG_I2C_INTERFACE
 
-#if CONFIG_SSD1306_128x64
-	ESP_LOGI(TAG, "Panel is 128x64");
-	ssd1306_init(&dev, 128, 64);
-#endif // CONFIG_SSD1306_128x64
-#if CONFIG_SSD1306_128x32
-	ESP_LOGE(TAG, "Panel is 128x32. This demo cannot be run.");
-	while(1) { vTaskDelay(1); }
-#endif // CONFIG_SSD1306_128x32
+	#if CONFIG_SSD1306_128x64
+		ESP_LOGI(TAG, "Panel is 128x64");
+		ssd1306_init(&dev, 128, 64);
+	#endif // CONFIG_SSD1306_128x64
+	#if CONFIG_SSD1306_128x32
+		ESP_LOGE(TAG, "Panel is 128x32. This demo cannot be run.");
+		while(1) { vTaskDelay(1); }
+	#endif // CONFIG_SSD1306_128x32
 	ssd1306_contrast(&dev, 0xff);
 
 	// Allocate memory
@@ -725,7 +683,7 @@ void display_task(void *param) {
 	}
 
 	// Convert from segmentDisplay to segmentImage
-for (int imageIndex=0; imageIndex<IMAGES; imageIndex++) {
+	for (int imageIndex=0; imageIndex<IMAGES; imageIndex++) {
 		ssd1306_clear_screen(&dev, false);
 		ssd1306_bitmaps_convert(&dev, 0, 8, dvd_icon[imageIndex], 56, 56, false);
 		ssd1306_get_buffer(&dev, buffer);
@@ -736,13 +694,13 @@ for (int imageIndex=0; imageIndex<IMAGES; imageIndex++) {
 		}
 
 	}
-    // list_files(MOUNT_POINT);
 
 	displaytoolbar(&dev);
 
 		while (1)
-	{	// kiểm tra trạng thái biến true thì sẽ chạy ảnh đĩa 
-	wait_for_button_push();
+	{	
+		// kiểm tra trạng thái biến true thì sẽ chạy ảnh đĩa 
+		wait_for_button_push();
 			
 				vTaskDelay(1);
 				for (int imageIndex=0;imageIndex<IMAGES; imageIndex++) {
@@ -754,35 +712,22 @@ for (int imageIndex=0; imageIndex<IMAGES; imageIndex++) {
 					vTaskDelay(10);
 
 				}
-			
-		
-
 	}
 	xTaskNotifyGive(NULL);
-
 }
 
+// task update màn oled
 void update_task(void *param) {
 
 	while (1) {
-
 		wait_for_var();
-				vTaskDelay(1);
-	// strcpy(name, "  ");
-
-		// strcat(name, listMusic[musicIndex]);
-		// printf("name: %s", name);
-			displaytoolbar(&dev);
-
-		
+		vTaskDelay(1);
+		displaytoolbar(&dev);
 	}
 		xTaskNotifyGive(NULL);
-
-
 }
 
-
-
+// hàm xử lí ngắt
 void input_event_callback(int pin) {
 	static uint64_t last_interrupt_time = 0;
 	uint64_t interrupt_time = esp_timer_get_time() / 1000; 
@@ -806,27 +751,22 @@ void input_event_callback(int pin) {
 			}
 		}
 		if(pin == GPIO_NUM_4) {
-			// updateScreen = true;
 			cursorPosition++;
 			if(cursorPosition > 2) {
 				cursorPosition = 0;
 			}
 		}
 			if(pin == GPIO_NUM_18) {
-			// updateScreen = true;
 			cursorPosition--;
 			if(cursorPosition <0 ) {
 				cursorPosition = 2;
 			}
 		}
 		updateScreen = true;
-
 	}
-    
 	last_interrupt_time = interrupt_time; 
 
 }
-
 
 void app_main(void)
 {
@@ -843,7 +783,6 @@ void app_main(void)
 	input_io_create(GPIO_NUM_5, HI_TO_LO);
 	input_io_create(GPIO_NUM_18, HI_TO_LO);
 	input_io_create(GPIO_NUM_4, HI_TO_LO);
-
     input_set_callback(input_event_callback);
 
 #if 0
@@ -853,7 +792,8 @@ void app_main(void)
 #endif
 #endif
 
-	   esp_err_t ret;
+	//CONFIG CHO SDCARD
+	esp_err_t ret;
     // Options for mounting the filesystem.
     // If format_if_mount_failed is set to true, SD card will be partitioned and
     // formatted in case when mounting fails.
@@ -942,18 +882,12 @@ void app_main(void)
 
     // Use POSIX and C standard library functions to work with files.
     // First create a file.
-    ESP_LOGI(TAG, "Opening file");
     list_files(MOUNT_POINT);
-		// printf("name: %s", listMusic[musicIndex]);
-		cout<<listMusic[musicIndex];
 
+// chạy các task hiển thị đĩa dvd, cập nhật màn hình, chơi nhạc
   xTaskCreate(display_task, "taskdisplay", 10000, NULL, 5, NULL);
   xTaskCreate(update_task, "taskupdate", 5000, NULL, 4, NULL);
   xTaskCreate(play_task, "task", 32768, NULL, 6, NULL);
-
-		// xTaskNotifyGive(NULL);
-
-	
 	
 }
 
