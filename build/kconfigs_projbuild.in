@@ -1,6 +1,0 @@
-source "D:/ESP/esp-idf/components/app_update/Kconfig.projbuild"
-source "D:/ESP/esp-idf/components/bootloader/Kconfig.projbuild"
-source "D:/ESP/esp-idf/components/esptool_py/Kconfig.projbuild"
-source "D:/ESP/esp-idf/components/partition_table/Kconfig.projbuild"
-source "D:/ESP/esp-idf/components/ssd1306/Kconfig.projbuild"
-source "D:/ESP/esp-idf/examples/storage/mp3-test/main/Kconfig.projbuild"
