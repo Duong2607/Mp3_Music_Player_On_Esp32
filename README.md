@@ -1,3 +1,8 @@
+# Phần cứng
+* esp32
+* thẻ sd
+* ssd1306
+* biến trở
 # Chạy trên esp-idf
 * v4.2
 # Sử dụng điện trở kéo lên cho các chân của thẻ sd 
